@@ -1,0 +1,1 @@
+El codigo implementa una interfaz de consola, seleccionar el número con respecto a la opción deberia dar las soluciones correctas.
