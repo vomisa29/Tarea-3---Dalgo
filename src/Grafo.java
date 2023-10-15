@@ -11,6 +11,8 @@ public class Grafo {
 	private int n;
 	private int[][] matrizDistancia;
 	private ArrayList<ArrayList<Integer>> subconjuntos = new ArrayList<ArrayList<Integer>>();
+	private int tiempoDFS = 0;
+	private boolean grafoCiclico;
 
 	public Grafo(String dirArchivo) {
 		inicializarGrafo(dirArchivo);
@@ -246,13 +248,44 @@ public class Grafo {
 
 		return numComponentes;
 	}
-	
+
 	public void DFS() {
-		
+		for (int i = 0; i < this.getN(); i++) {
+			Nodo u = this.getListaNodos().get(i);
+			u.setColor(0);
+			u.setIdNodoPredecesor(-1);
+		}
+		this.tiempoDFS = 0;
+		this.setGrafoCiclico(false);// Esto inicializa la variable GrafoCiclico en falso, se asume que es aciclico
+		for (int i = 0; i < this.getN(); i++) {
+			Nodo u = this.getListaNodos().get(i);
+			if (u.getColor() == 0) {
+				DFS_Visit(u.getIdNodo());
+			}
+		}
 	}
-	
+
 	public void DFS_Visit(int nodo) {
-		
+		Nodo u = this.getListaNodos().get(nodo);
+		this.tiempoDFS = this.getTiempoDFS() + 1;
+		u.setDescubrimiento(this.tiempoDFS);
+		u.setColor(1);
+		for (int j = 0; j < this.getN(); j++) {
+			int pesoArco = this.getGrafo()[u.getIdNodo()][j];
+			if (pesoArco != 99999999 && pesoArco != 0) {
+				Nodo v = this.getListaNodos().get(j);
+				if (v.getColor() == 1) {// Este es el check para ver si el grafo tiene ciclos
+					this.setGrafoCiclico(true);
+				}
+				if (v.getColor() == 0) {
+					v.setIdNodoPredecesor(u.getIdNodo());
+					DFS_Visit(j);
+				}
+			}
+		}
+		u.setColor(2);
+		this.tiempoDFS = this.getTiempoDFS() + 1;
+		u.setFinalizacion(this.tiempoDFS);
 	}
 
 	public void imprimirSubconjuntosConectados(int numSubconjuntos) {
@@ -342,5 +375,21 @@ public class Grafo {
 
 	public void setSubconjuntos(ArrayList<ArrayList<Integer>> subconjuntos) {
 		this.subconjuntos = subconjuntos;
+	}
+
+	public int getTiempoDFS() {
+		return tiempoDFS;
+	}
+
+	public void setTiempoDFS(int tiempoDFS) {
+		this.tiempoDFS = tiempoDFS;
+	}
+
+	public boolean getGrafoCiclico() {
+		return grafoCiclico;
+	}
+
+	public void setGrafoCiclico(boolean grafoCiclico) {
+		this.grafoCiclico = grafoCiclico;
 	}
 }
