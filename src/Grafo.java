@@ -69,7 +69,7 @@ public class Grafo {
 		int pesoActual_U = u.getPesoActual();
 		int pesoActual_V = v.getPesoActual();
 
-		if (pesoActual_V > pesoActual_U + this.grafo[id_U][id_V]) {
+		if (pesoActual_U != 99999999 && pesoActual_V > pesoActual_U + this.grafo[id_U][id_V]) {
 			v.setPesoActual(pesoActual_U + this.grafo[id_U][id_V]);
 			v.setIdNodoPredecesor(id_U);
 		}
